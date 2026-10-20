@@ -1,0 +1,8 @@
+clip:
+  model_id: openai/clip-vit-base-patch32
+
+siglip:
+  model_id: google/siglip-base-patch16-224
+
+dinov2:
+  model_id: facebook/dinov2-base
