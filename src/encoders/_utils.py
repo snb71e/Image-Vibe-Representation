@@ -55,3 +55,18 @@ def load_image(image: ImageInput) -> Image.Image:
         with Image.open(image) as opened_image:
             return opened_image.convert("RGB")
     raise TypeError("image must be a PIL.Image.Image or a filesystem path")
+
+
+def feature_tensor(output: Any) -> torch.Tensor:
+    """Handle both tensor and pooled-output return types across Transformers versions."""
+    if isinstance(output, torch.Tensor):
+        return output
+
+    pooled_output = getattr(output, "pooler_output", None)
+    if isinstance(pooled_output, torch.Tensor):
+        return pooled_output
+
+    raise TypeError(
+        "The Transformers feature method returned an unsupported output type: "
+        f"{type(output).__name__}"
+    )

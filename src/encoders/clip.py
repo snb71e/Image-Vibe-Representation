@@ -6,7 +6,14 @@ import torch
 import torch.nn.functional as F
 from transformers import CLIPModel, CLIPProcessor
 
-from ._utils import DEFAULT_CONFIG_PATH, ImageInput, load_image, load_model_id, select_device
+from ._utils import (
+    DEFAULT_CONFIG_PATH,
+    ImageInput,
+    feature_tensor,
+    load_image,
+    load_model_id,
+    select_device,
+)
 
 
 class CLIPEncoder:
@@ -25,7 +32,7 @@ class CLIPEncoder:
     def encode_image(self, image: ImageInput) -> torch.Tensor:
         inputs = self.processor(images=load_image(image), return_tensors="pt")
         inputs = inputs.to(self.device)
-        embedding = self.model.get_image_features(**inputs)
+        embedding = feature_tensor(self.model.get_image_features(**inputs))
         return F.normalize(embedding, p=2, dim=-1).squeeze(0)
 
     @torch.inference_mode()
@@ -38,5 +45,5 @@ class CLIPEncoder:
             padding=True,
             truncation=True,
         ).to(self.device)
-        embeddings = self.model.get_text_features(**inputs)
+        embeddings = feature_tensor(self.model.get_text_features(**inputs))
         return F.normalize(embeddings, p=2, dim=-1)
