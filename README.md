@@ -28,6 +28,9 @@ Install the local inference dependencies:
 pip install -r requirements.txt
 ```
 
+SigLIP's tokenizer uses SentencePiece and protobuf; both are included in
+`requirements.txt`.
+
 Extract an image embedding (the model is downloaded by Transformers on first use):
 
 ```bash
